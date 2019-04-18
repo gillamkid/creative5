@@ -5,19 +5,21 @@
     <br>
     <button v-on:click="getPunchline" class="btn btn-primary">Get Punchline</button>
     <button v-on:click="newJoke" class="btn btn-primary">New Joke</button>
-    <button v-on:click="saveJoke" class="btn btn-warning">Save Joke</button>
+    <button v-if="user" v-on:click="saveJoke" class="btn btn-warning">Save Joke</button>
     <br>
     <br>
-    <h2>My Saved Jokes</h2>
-    <hr>
-    <br>
-    <div v-for="j in my_jokes">
-        <h3>{{getJokeByID(j.jokeID).joke}}</h3>
-        <h5>{{getJokeByID(j.jokeID).punchline}}</h5>
-        <button v-if="get_favorite(j)" v-on:click="unFavorite(j._id)"
-            class="btn btn-success">Un-Favorite</button>
-        <button v-else v-on:click="markFavorite(j._id)" class="btn btn-success">Mark As Favorite</button>
-        <button v-on:click="deleteJoke(j._id)" class="btn btn-danger">Delete</button>
+    <div v-if="user">
+      <h2>My Saved Jokes</h2>
+      <hr>
+      <br>
+      <div v-for="j in my_jokes">
+          <h3>{{getJokeByID(j.jokeID).joke}}</h3>
+          <h5>{{getJokeByID(j.jokeID).punchline}}</h5>
+          <button v-if="get_favorite(j)" v-on:click="unFavorite(j._id)"
+              class="btn btn-success">Un-Favorite</button>
+          <button v-else v-on:click="markFavorite(j._id)" class="btn btn-success">Mark As Favorite</button>
+          <button v-on:click="deleteJoke(j._id)" class="btn btn-danger">Delete</button>
+      </div>
     </div>
 </div>
 </template>
