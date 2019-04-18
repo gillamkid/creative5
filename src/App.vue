@@ -1,101 +1,90 @@
 <template>
 <div id="app">
-  <div class="pure-menu">
-    <span class="pure-menu-heading">Photo Bomb</span>
-    <ul class="pure-menu-list">
-      <li class="pure-menu-item">
-        <router-link to="/" class="pure-menu-link">Home</router-link>
-      </li>
-      <li class="pure-menu-item">
-        <router-link to="/mypage" class="pure-menu-link">My Page</router-link>
-      </li>
-    </ul>
-  </div>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">Jokes</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <router-link to="/" class="nav-link">Home</router-link>                    
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/html/find_jokes.html">Find Jokes</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/html/login.html">Login</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
   <div class="content">
     <router-view />
-<div id="footer">Github classroom repository URL: <a href="https://github.com/BYU-CS-260-Winter-2019/lab-5-gillamkid">ht
-tps://github.com/BYU-CS-260-Winter-2019/lab-5-gillamkid</a></div>
+    <div id="footer">
+        Github classroom repository URL: <a
+            href="https://github.com/thaitie/creative5/">https://github.com/thaitie/creative5/</a>
+    </div>   
   </div>
 </div>
 </template>
 
 <style>
+
+html {
+  height: 100%;
+}
+
+body {
+  font-family: Helvetica;
+  margin: 0;
+  height: 100%;
+}
+
+img {
+  max-width: 100%;
+}
+
+#page_content {
+  padding: 20px;
+  min-height: 100%;
+  max-width: 900px;
+  text-align: center;
+  margin: auto;
+}
+
+#joke_setup {
+  font-size: 24px;
+}
+
 #footer {
   width: 100%;
   clear: both;
   padding: 10px;
   margin: 0;
-}
-
-
-/* https://color.adobe.com/Ventana-Azul-color-theme-2159606/?showPublished=true */
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  font-size: 18px;
-  display: flex;
-  min-height: 100%;
-}
-
-.pure-menu {
-  /* To limit the menu width to the content of the menu: */
-  /* display: inline-block; */
-  /* Or set the width explicitly: */
-  text-align: left;
-  background: #000;
-}
-
-.pure-menu-heading {
-  color: #fff;
-  font-size: 1.2em;
-  padding: 20px 20px;
-  background-color: #F2385A;
-  margin-bottom: 10px;
-}
-
-.pure-menu-link {
-  color: #fff;
-  padding: 10px 20px;
-  font-weight: 800;
-}
-
-.pure-menu-link:hover {
+  /* ATTENTION! The following elements below 
+  can be set to whatever your heart desires */
   background: #333;
+  color: white;
 }
 
-.pure-menu-link.router-link-exact-active {
-  background: #fff;
-  color: #F2385A;
+#footer a:link {
+  color: white;
 }
 
-.content {
-  margin: 50px 100px;
+#footer a:visited {
+  color: white;
 }
 
-html {
-  height: 100%;
-  box-sizing: border-box;
+#footer a:hover {
+  color: white;
 }
 
-body {
-  height: 100%;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: inherit;
-  /* https://css-tricks.com/box-sizing/ */
-}
-
-.error {
-  color: #F2385A;
-}
-
-.pure-button-primary {
-  background-color: #36B1BF;
+.input-username, .input-password, .checkbox_remember, .login-button {
+  margin-top:15px;
 }
 
 /* Modals */

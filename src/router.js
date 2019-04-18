@@ -5,6 +5,7 @@ import Register from './views/Register.vue'
 import MyPage from './views/MyPage.vue'
 import Login from './views/Login.vue'
 import Photo from './views/Photo.vue'
+import FindJokes from './views/FindJokes.vue'
 
 Vue.use(Router)
 
@@ -21,6 +22,11 @@ export default new Router({
       path: '/mypage',
       name: 'mypage',
       component: MyPage,
+    },
+    {
+      path: '/findjokes',
+      name: 'findjokes',
+      component: FindJokes,
     },
     {
       path: '/register',
