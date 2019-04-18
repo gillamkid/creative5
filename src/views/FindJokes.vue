@@ -571,7 +571,7 @@ export default {
     async saveJoke() {
         try {
             await axios.post('/api/items', {
-                username: 'username',
+                username: this.user.username,
                 jokeID: this.current.id,
                 favorite: false
             });

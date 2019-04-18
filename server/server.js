@@ -23,6 +23,9 @@ app.use("/api/users", users.routes);
 const photos = require("./photos.js");
 app.use("/api/photos", photos.routes);
 
+const items = require("./items.js");
+app.use("/api/items", items.routes);
+
 const comments = require("./comments.js");
 app.use("/api/comments", comments.routes);
 
