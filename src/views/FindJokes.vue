@@ -1,44 +1,495 @@
 <template>
 <div>
-  <div v-if="user">
-    <div class="header">
-      <div>
-        <h1>{{user.name}}</h1>
-      </div>
-      <div>
-        <p>
-          <a @click="toggleUpload"><i class="far fa-image"></i></a>
-          <a href="#" @click="logout"><i class="fas fa-sign-out-alt"></i></a>
-        </p>
-      </div>
+<h3>{{current.joke}}</h3>
+    <h5>{{current.punchline_shown}}</h5>
+    <br>
+    <button v-on:click="getPunchline" class="btn btn-primary">Get Punchline</button>
+    <button v-on:click="newJoke" class="btn btn-primary">New Joke</button>
+    <button v-on:click="saveJoke" class="btn btn-warning">Save Joke</button>
+    <br>
+    <br>
+    <h2>My Saved Jokes</h2>
+    <hr>
+    <br>
+    <div v-for="j in my_jokes">
+        <h3>{{getJokeByID(j.jokeID).joke}}</h3>
+        <h5>{{getJokeByID(j.jokeID).punchline}}</h5>
+        <button v-if="get_favorite(j)" v-on:click="unFavorite(j._id)"
+            class="btn btn-success">Un-Favorite</button>
+        <button v-else v-on:click="markFavorite(j._id)" class="btn btn-success">Mark As Favorite</button>
+        <button v-on:click="deleteJoke(j._id)" class="btn btn-danger">Delete</button>
     </div>
-    <escape-event @escape="escape"></escape-event>
-    <uploader :show="show" @escape="escape" @uploadFinished="uploadFinished" />
-    <image-gallery :photos="photos" />
-  </div>
-  <div v-else>
-    <p>If you would like to upload photos, please register for an account or login.</p>
-    <router-link to="/register" class="pure-button">Register</router-link> or
-    <router-link to="/login" class="pure-button">Login</router-link>
-  </div>
 </div>
 </template>
 
 <script>
-import EscapeEvent from '@/components/EscapeEvent.vue'
-import Uploader from '@/components/Uploader.vue'
-import ImageGallery from '@/components/ImageGallery.vue'
+import axios from 'axios';
 
 export default {
   name: 'findjokes',
   components: {
-    EscapeEvent,
-    Uploader,
-    ImageGallery
   },
   data() {
     return {
-      show: false,
+      allJokes: [
+    {
+        "id": 1,
+        "type": "general",
+        "setup": "What did the fish say when it hit the wall?",
+        "punchline": "Dam."
+    },
+    {
+        "id": 2,
+        "type": "general",
+        "setup": "How do you make a tissue dance?",
+        "punchline": "You put a little boogie on it."
+    },
+    {
+        "id": 3,
+        "type": "general",
+        "setup": "What's Forrest Gump's password?",
+        "punchline": "1Forrest1"
+    },
+    {
+        "id": 4,
+        "type": "general",
+        "setup": "What do you call a belt made out of watches?",
+        "punchline": "A waist of time."
+    },
+    {
+        "id": 5,
+        "type": "general",
+        "setup": "Why can't bicycles stand on their own?",
+        "punchline": "They are two tired"
+    },
+    {
+        "id": 6,
+        "type": "general",
+        "setup": "How does a train eat?",
+        "punchline": "It goes chew, chew"
+    },
+    {
+        "id": 7,
+        "type": "general",
+        "setup": "What do you call a singing Laptop",
+        "punchline": "A Dell"
+    },
+    {
+        "id": 8,
+        "type": "general",
+        "setup": "How many lips does a flower have?",
+        "punchline": "Tulips"
+    },
+    {
+        "id": 9,
+        "type": "general",
+        "setup": "How do you organize an outer space party?",
+        "punchline": "You planet"
+    },
+    {
+        "id": 10,
+        "type": "general",
+        "setup": "What kind of shoes does a thief wear?",
+        "punchline": "Sneakers"
+    },
+    {
+        "id": 11,
+        "type": "general",
+        "setup": "What's the best time to go to the dentist?",
+        "punchline": "Tooth hurty."
+    },
+    {
+        "id": 12,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n A broken pencil. \n A broken pencil who?",
+        "punchline": "Never mind. It's pointless."
+    },
+    {
+        "id": 13,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Cows go. \n Cows go who?",
+        "punchline": "No, cows go moo."
+    },
+    {
+        "id": 14,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Little old lady. \n Little old lady who?",
+        "punchline": "I didn't know you could yodel!"
+    },
+    {
+        "id": 15,
+        "type": "programming",
+        "setup": "What's the best thing about a Boolean?",
+        "punchline": "Even if you're wrong, you're only off by a bit."
+    },
+    {
+        "id": 16,
+        "type": "programming",
+        "setup": "What's the object-oriented way to become wealthy?",
+        "punchline": "Inheritance"
+    },
+    {
+        "id": 17,
+        "type": "programming",
+        "setup": "Where do programmers like to hangout?",
+        "punchline": "The Foo Bar."
+    },
+    {
+        "id": 18,
+        "type": "programming",
+        "setup": "Why did the programmer quit his job?",
+        "punchline": "Because he didn't get arrays."
+    },
+    {
+        "id": 19,
+        "type": "general",
+        "setup": "Did you hear about the two silk worms in a race?",
+        "punchline": "It ended in a tie."
+    },
+    {
+        "id": 20,
+        "type": "general",
+        "setup": "What do you call a laughing motorcycle?",
+        "punchline": "A Yamahahahaha."
+    },
+    {
+        "id": 21,
+        "type": "general",
+        "setup": "A termite walks into a bar and says...",
+        "punchline": "'Where is the bar tended?'"
+    },
+    {
+        "id": 22,
+        "type": "general",
+        "setup": "What does C.S. Lewis keep at the back of his wardrobe?",
+        "punchline": "Narnia business!"
+    },
+    {
+        "id": 23,
+        "type": "programming",
+        "setup": "Why do programmers always mix up Halloween and Christmas?",
+        "punchline": "Because Oct 31 == Dec 25"
+    },
+    {
+        "id": 24,
+        "type": "programming",
+        "setup": "A SQL query walks into a bar, walks up to two tables and asks...",
+        "punchline": "'Can I join you?'"
+    },
+    {
+        "id": 25,
+        "type": "programming",
+        "setup": "How many programmers does it take to change a lightbulb?",
+        "punchline": "None that's a hardware problem"
+    },
+    {
+        "id": 26,
+        "type": "programming",
+        "setup": "If you put a million monkeys at a million keyboards, one of them will eventually write a Java program",
+        "punchline": "the rest of them will write Perl"
+    },
+    {
+        "id": 27,
+        "type": "programming",
+        "setup": "['hip', 'hip']",
+        "punchline": "(hip hip array)"
+    },
+    {
+        "id": 28,
+        "type": "programming",
+        "setup": "To understand what recursion is...",
+        "punchline": "You must first understand what recursion is"
+    },
+    {
+        "id": 29,
+        "type": "programming",
+        "setup": "There are 10 types of people in this world...",
+        "punchline": "Those who understand binary and those who don't"
+    },
+    {
+        "id": 30,
+        "type": "general",
+        "setup": "What did the duck say when he bought lipstick?",
+        "punchline": "Put it on my bill"
+    },
+    {
+        "id": 31,
+        "type": "general",
+        "setup": "What happens to a frog's car when it breaks down?",
+        "punchline": "It gets toad away"
+    },
+    {
+        "id": 32,
+        "type": "general",
+        "setup": "did you know the first French fries weren't cooked in France?",
+        "punchline": "they were cooked in Greece"
+    },
+    {
+        "id": 33,
+        "type": "programming",
+        "setup": "Which song would an exception sing?",
+        "punchline": "Can't catch me - Avicii"
+    },
+    {
+        "id": 34,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Opportunity.",
+        "punchline": "That is impossible. Opportunity doesnt come knocking twice!"
+    },
+    {
+        "id": 35,
+        "type": "programming",
+        "setup": "Why do Java programmers wear glasses?",
+        "punchline": "Because they don't C#"
+    },
+    {
+        "id": 36,
+        "type": "general",
+        "setup": "Why did the mushroom get invited to the party?",
+        "punchline": "Because he was a fungi."
+    },
+    {
+        "id": 37,
+        "type": "general",
+        "setup": "Why did the mushroom get invited to the party?",
+        "punchline": "Because he was a fungi."
+    },
+    {
+        "id": 38,
+        "type": "general",
+        "setup": "I'm reading a book about anti-gravity...",
+        "punchline": "It's impossible to put down"
+    },
+    {
+        "id": 39,
+        "type": "general",
+        "setup": "If you're American when you go into the bathroom, and American when you come out, what are you when you're in there?",
+        "punchline": "European"
+    },
+    {
+        "id": 40,
+        "type": "general",
+        "setup": "Want to hear a joke about a peice of paper?",
+        "punchline": "Never mind...it's tearable"
+    },
+    {
+        "id": 41,
+        "type": "general",
+        "setup": "I just watched a documentary about beavers.",
+        "punchline": "It was the best dam show I ever saw"
+    },
+    {
+        "id": 42,
+        "type": "general",
+        "setup": "If you see a robbery at an Apple Store...",
+        "punchline": "Does that make you an iWitness?"
+    },
+    {
+        "id": 43,
+        "type": "general",
+        "setup": "A ham sandwhich walks into a bar and orders a beer. The bartender says...",
+        "punchline": "I'm sorry, we don't serve food here"
+    },
+    {
+        "id": 44,
+        "type": "general",
+        "setup": "Why did the Clydesdale give the pony a glass of water?",
+        "punchline": "Because he was a little horse"
+    },
+    {
+        "id": 45,
+        "type": "general",
+        "setup": "If you boil a clown...",
+        "punchline": "Do you get a laughing stock?"
+    },
+    {
+        "id": 46,
+        "type": "general",
+        "setup": "Finally realized why my plant sits around doing nothing all day...",
+        "punchline": "He loves his pot."
+    },
+    {
+        "id": 47,
+        "type": "general",
+        "setup": "Don't look at the eclipse through a colander.",
+        "punchline": "You'll strain your eyes."
+    },
+    {
+        "id": 48,
+        "type": "general",
+        "setup": "I bought some shoes from a drug dealer.",
+        "punchline": "I don't know what he laced them with, but I was tripping all day!"
+    },
+    {
+        "id": 49,
+        "type": "general",
+        "setup": "Why do chicken coops only have two doors?",
+        "punchline": "Because if they had four, they would be chicken sedans"
+    },
+    {
+        "id": 50,
+        "type": "general",
+        "setup": "What do you call a factory that sells passable products?",
+        "punchline": "A satisfactory"
+    },
+    {
+        "id": 51,
+        "type": "general",
+        "setup": "When a dad drives past a graveyard: Did you know that's a popular cemetery?",
+        "punchline": "Yep, people are just dying to get in there"
+    },
+    {
+        "id": 52,
+        "type": "general",
+        "setup": "Why did the invisible man turn down the job offer?",
+        "punchline": "He couldn't see himself doing it"
+    },
+    {
+        "id": 53,
+        "type": "general",
+        "setup": "How do you make holy water?",
+        "punchline": "You boil the hell out of it"
+    },
+    {
+        "id": 54,
+        "type": "general",
+        "setup": "I had a dream that I was a muffler last night.",
+        "punchline": "I woke up exhausted!"
+    },
+    {
+        "id": 55,
+        "type": "general",
+        "setup": "Why is peter pan always flying?",
+        "punchline": "Because he neverlands"
+    },
+    {
+        "id": 56,
+        "type": "programming",
+        "setup": "How do you check if a webpage is HTML5?",
+        "punchline": "Try it out on Internet Explorer"
+    },
+    {
+        "id": 57,
+        "type": "general",
+        "setup": "What do you call a cow with no legs?",
+        "punchline": "Ground beef!"
+    },
+    {
+        "id": 58,
+        "type": "general",
+        "setup": "I dropped a pear in my car this morning.",
+        "punchline": "You should drop another one, then you would have a pair."
+    },
+    {
+        "id": 59,
+        "type": "programming",
+        "setup": "Lady: How do I spread love in this cruel world?",
+        "punchline": "Random Dude: [...]"
+    },
+    {
+        "id": 60,
+        "type": "programming",
+        "setup": "A user interface is like a joke.",
+        "punchline": "If you have to explain it then it is not that good."
+    },
+    {
+        "id": 61,
+        "type": "knock-knock",
+        "setup": "Knock knock. \n Who's there? \n Hatch. \n Hatch who?",
+        "punchline": "Bless you!"
+    },
+    {
+        "id": 62,
+        "type": "general",
+        "setup": "What do you call sad coffee?",
+        "punchline": "Despresso."
+    },
+    {
+        "id": 63,
+        "type": "general",
+        "setup": "Why did the butcher work extra hours at the shop?",
+        "punchline": "To make ends meat."
+    },
+    {
+        "id": 64,
+        "type": "general",
+        "setup": "Did you hear about the hungry clock?",
+        "punchline": "It went back four seconds."
+    },
+    {
+        "id": 65,
+        "type": "general",
+        "setup": "Well...",
+        "punchline": "Thats a deep subject."
+    },
+    {
+        "id": 66,
+        "type": "general",
+        "setup": "Did You Hear The Story About The Cheese That Saved The World?",
+        "punchline": "It was legend dairy."
+    },
+    {
+        "id": 67,
+        "type": "general",
+        "setup": "Did You Watch The New Comic Book Movie?",
+        "punchline": "It was very graphic!"
+    },
+    {
+        "id": 68,
+        "type": "general",
+        "setup": "I Started A New Business Making Yachts In My Attic This Year...",
+        "punchline": "The sails are going through the roof."
+    },
+    {
+        "id": 69,
+        "type": "general",
+        "setup": "I Got Hit In the Head By A Soda Can, But It Didn't Hurt That Much...",
+        "punchline": "It was a soft drink."
+    },
+    {
+        "id": 70,
+        "type": "general",
+        "setup": "I Can't Tell If I Like This Blender...",
+        "punchline": "It keeps giving me mixed results."
+    },
+    {
+        "id": 71,
+        "type": "general",
+        "setup": "WI Couldn't Get A Reservation At The Library...",
+        "punchline": "They were fully booked."
+    },
+    {
+        "id": 72,
+        "type": "programming",
+        "setup": "I was gonna tell you a joke about UDP...",
+        "punchline": "...but you might not get it."
+    },
+    {
+        "id": 73,
+        "type": "programming",
+        "setup": "The punchline often arrives before the set-up.",
+        "punchline": "Do you know the problem with UDP jokes?"
+    },
+    {
+        "id": 74,
+        "type": "programming",
+        "setup": "Why do C# and Java developers keep breaking their keyboards?",
+        "punchline": "Because they use a strongly typed language."
+    },
+    {
+        "id": 75,
+        "type": "general",
+        "setup": "What do you give to a lemon in need?",
+        "punchline": "Lemonaid."
+    }
+],
+      my_jokes: [],
+      current: {
+        id: '',
+        joke: '',
+        punchline_shown: '',
+        punchline: ''
+      },
     }
   },
   computed: {
@@ -51,22 +502,83 @@ export default {
   },
   async created() {
     await this.$store.dispatch("getUser");
-    await this.$store.dispatch("getMyPhotos");
+    this.newJoke();
+    this.getMyJokes();
   },
   methods: {
-    async uploadFinished() {
-      this.show = false;
-      try {
-        this.error = await this.$store.dispatch("getMyPhotos");
-      } catch (error) {
-        console.log(error);
-      }
+getJoke(id) {
+    return {
+        "joke": this.allJokes[id].setup,
+        "punchline_shown": '',
+        "punchline": this.allJokes[id].punchline
+    };
+},
+    get_favorite(j) {
+      this.getMyJokes();
+      return j.favorite;
+    }, 
+   async deleteJoke(id) {
+        try {
+            axios.delete('/api/items/' + id);
+            this.getMyJokes();
+        } catch (error) {
+            console.log(error);
+        }
     },
-    escape() {
-      this.show = false;
+    async markFavorite(id) {
+        try {
+            await axios.put('/api/items/' + id, {
+                favorite: true
+            });
+            this.getMyJokes();
+        } catch (error) {
+            console.log(error);
+        }
     },
-    toggleUpload() {
-      this.show = true;
+    async unFavorite(id) {
+        try {
+            await axios.put('/api/items/' + id, {
+                favorite: false
+            });
+            this.getMyJokes();
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    async getMyJokes() {
+        try {
+            let r = await axios.get('/api/items');
+            this.my_jokes = r.data;
+            return true;
+        } catch (error) {
+            console.log(error);
+        }
+    },
+    // This is just a wrapper function to allow us to use the external function in Vue
+    getJokeByID(id) {
+        return this.getJoke(id); // From jokes.js
+    },
+    newJoke() {
+        this.current.id = Math.floor(Math.random() * this.allJokes.length);
+        let jokeData = this.getJoke(this.current.id); // From jokes.js
+        this.current.joke = jokeData.joke;
+        this.current.punchline_shown = jokeData.punchline_shown;
+        this.current.punchline = jokeData.punchline;
+    },
+    getPunchline() {
+        this.current.punchline_shown = this.current.punchline;
+    },
+    async saveJoke() {
+        try {
+            await axios.post('/api/items', {
+                username: 'username',
+                jokeID: this.current.id,
+                favorite: false
+            });
+            this.getMyJokes();
+        } catch (error) {
+            console.log("This joke already exists in the database!");
+        }
     },
     async logout() {
       try {
