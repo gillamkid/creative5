@@ -4,7 +4,6 @@ import Home from './views/Home.vue'
 import Register from './views/Register.vue'
 import MyPage from './views/MyPage.vue'
 import Login from './views/Login.vue'
-import Photo from './views/Photo.vue'
 import FindJokes from './views/FindJokes.vue'
 
 Vue.use(Router)
@@ -38,10 +37,5 @@ export default new Router({
       name: 'login',
       component: Login
     },
-    {
-      path: '/photo/:id',
-      name: 'photo',
-      component: Photo
-    }
   ]
 }) 
