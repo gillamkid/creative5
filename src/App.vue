@@ -10,13 +10,13 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <router-link to="/" class="nav-link">Home</router-link>                    
+                    <a href="/" class="nav-link">Home</a>                    
                 </li>
                 <li class="nav-item">
-                    <router-link to="/findjokes" class="nav-link">Find Jokes</router-link>
+                    <a href="/findjokes" class="nav-link">Find Jokes</a>
                 </li>
                 <li class="nav-item">
-                    <router-link to="/mypage" class="nav-link">Login</router-link>
+                    <a href="/mypage" class="nav-link">Login</a>
                 </li>
             </ul>
         </div>
